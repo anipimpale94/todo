@@ -1,0 +1,116 @@
+<!doctype.html>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy"
+        crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4"
+    crossorigin="anonymous"></script>
+<script src="/socket.io/socket.io.js"></script>
+
+<div class="container">
+    <br>
+    <div class="jumbotron">
+        <h1 class="display-5">Welcome to my todo list</h1>
+    </div>
+    <br>
+    <input id="inputTask" class="form-control" placeholder="Input Task">
+    <br>
+    <button id="insertTask" class="btn btn-success">Insert</button>
+    <br>
+    <br>
+    <div id='tasks'>
+
+    </div>
+</div>
+
+<script>
+    var socket = io();
+    $.fn.onEnterKey = function( closure ) { 
+        $(this).keypress( function( event ) {
+            var code = event.keyCode ? event.keyCode: event.which; 
+            if (code == 13) { closure(); return false; } 
+        }); 
+    }
+
+    $(() => {
+        
+        $("#inputTask").on("keypress", function(e) { 
+            if(e.which == 13) { 
+                if( $("#inputTask").val() != "") { 
+                    var task = { "task": $("#inputTask").val(), "status": "no"};
+                    postTask(task); 
+                    $("#inputTask").val(""); 
+                }   
+            }        
+        });
+
+        $("#insertTask").click(() => {
+            if( $("#inputTask").val() != "") {
+                var input = $("#inputTask").val()
+                var task = { "task": input.trim(), "status": "no" };
+                postTask(task);
+                $("#inputTask").val("");
+            }
+        });
+
+        $('body').on('click', 'button[id^="complete"]', function(elem) {
+            var textID = "#" + "scrap" + ([...this.id].filter(e => isFinite(e)).join(''));
+            var text = $(textID).text().trim().split(") ");
+            console.log(text[1]);
+            
+            var task = { "task": text[1].trim(), "status": "yes" };
+            postTask(task);
+        })
+
+        getTask();
+    });
+
+    function addTask(tasks) {
+        var count = $("#tasks > div").length + 1;
+        $("#tasks").append(`
+            <div class="row">
+                <div class="text-left col-11" id="scrap`+ count + `">
+                    `+ count +`) ${tasks.task} 
+                </div>
+                <div class="col-1"> 
+
+                    <button id="complete`+ count + `" class="close" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>    
+            <br>
+        `);
+        if(tasks.status == "yes")
+            completeTask("complete"+count);
+    }
+
+    function completeTask(id) {
+        var buttonVanish = "#" + id;
+        $(buttonVanish).hide();
+        var textID = "#" + "scrap" + ([...id].filter( e => isFinite(e)).join(''));
+        $(textID).css("text-decoration", "line-through");
+    }
+
+    function getTask() {
+        $.get('/tasks', (data) => {
+            data.forEach(addTask);
+        });
+    }
+
+    function postTask(tasks) {  
+        $.post('/tasks', tasks);
+    }
+
+    function scrapTask(tasks) {
+        $("#tasks").html('');
+        getTask();
+    }
+
+    socket.on('taskAdd', addTask);
+    socket.on('taskStatus', scrapTask);
+</script>
