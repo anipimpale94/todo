@@ -9,6 +9,8 @@ app.use(express.static(__dirname));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
+var port = process.env.PORT || 3000;
+
 var dbUrl = 'mongodb://user:user@ds053774.mlab.com:53774/todolist'; 
 
 var Task = mongoose.model('Task', {
@@ -63,6 +65,6 @@ mongoose.connect(dbUrl, {useMongoClient: true} , (err) => {
     console.log("mongo connected", err);
 });
 
-var server = http.listen(8080, () => {
+var server = http.listen(port, () => {
     console.log("Server is listen on port", server.address().port);
 });
