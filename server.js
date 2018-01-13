@@ -28,7 +28,18 @@ app.get('/tasks', (req,res) => {
 });
 
 app.post('/tasks', (req,res) => {
-    if(req.body.status == "yes") {
+
+    if(req.body.status == "clear") {
+        Task.remove({status: "yes"}, (err) => {
+            if(err) {
+                console.log(err);
+            }
+        });
+        io.emit('taskStatus', req.body);
+        res.sendStatus(200);
+    }
+
+    else if(req.body.status == "yes") {
         var todo = new Task(req.body);
         console.log(todo);
         

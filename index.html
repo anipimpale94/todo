@@ -1,6 +1,6 @@
 <!doctype.html>
 
-<meta name="viewport" content="width=device-width" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy"
@@ -23,9 +23,11 @@
         <br>
         <input id="inputTask" class="form-control" placeholder="Input Task">
         <br>
+        <div>
         <button id="insertTask" class="btn btn-success">Insert</button>
-        <br>
-        <br>
+        <button id="clearTask" class="pull-right btn btn-success">Clear</button>
+        </div>
+        <br><br><br>
         <div id='tasks' class="showTasks">
 
         </div>
@@ -52,6 +54,11 @@
                 }   
             }        
         });
+
+        $("#clearTask").click(() => {
+            var task = { "task": "clear", "status": "clear" };
+            postTask(task);
+        });        
 
         $("#insertTask").click(() => {
             if( $("#inputTask").val() != "") {

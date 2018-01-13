@@ -20,4 +20,6 @@
 
     button {
         font-size: 150% !important;
+        float: right;
+        margin: 2%
     }
