@@ -1,4 +1,7 @@
 <!doctype.html>
+
+<meta name="viewport" content="width=device-width" />
+
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy"
         crossorigin="anonymous">
@@ -11,21 +14,23 @@
     crossorigin="anonymous"></script>
 <script src="/socket.io/socket.io.js"></script>
 
-<div class="main container-fluid">
-    <br>
-    <div class="jumbotron">
-        <h1 class="display-5">Welcome to my todo list</h1>
-    </div>
-    <br>
-    <input id="inputTask" class="form-control" placeholder="Input Task">
-    <br>
-    <button id="insertTask" class="btn btn-success">Insert</button>
-    <br>
-    <br>
-    <div id='tasks'>
+<body>
+    <div class="main container-fluid">
+        <br>
+        <div class="jumbotron">
+            <h1 class="display-5">Welcome to my todo list</h1>
+        </div>
+        <br>
+        <input id="inputTask" class="form-control" placeholder="Input Task">
+        <br>
+        <button id="insertTask" class="btn btn-success">Insert</button>
+        <br>
+        <br>
+        <div id='tasks' class="showTasks">
 
+        </div>
     </div>
-</div>
+</body>
 
 <script>
     var socket = io();
@@ -83,7 +88,6 @@
                     </button>
                 </div>
             </div>    
-            <br>
         `);
         if(tasks.status == "yes")
             completeTask("complete"+count);
