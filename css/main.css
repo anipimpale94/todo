@@ -7,7 +7,8 @@
     }
 
     .form-control {
-        font-size: 220% !important;
+        font-size: 200% !important;
+        align: right;
     }
 
     .showTasks {
@@ -20,6 +21,6 @@
 
     button {
         font-size: 150% !important;
-        float: right;
-        margin: 2%
+        margin: 1.5%
     }
+
