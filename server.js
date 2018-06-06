@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 var port = process.env.PORT || 3000;
 
-var dbUrl = 'mongodb://user:user@ds053774.mlab.com:53774/todolist'; 
+var dbUrl = 'mongodb://xxxx:xxxx@ds053774.mlab.com:53774/todolist'; 
 
 var Task = mongoose.model('Task', {
     task: String,
